@@ -160,7 +160,8 @@ void SceneManager::setupScene()
 
     Tile *til;
 
-    unsigned int texID = loadTexture("textures/basic_ground_tiles.png");
+    unsigned int groundTextures = loadTexture("textures/basic_ground_tiles.png");
+    unsigned int waterTexture = loadTexture("textures/water.png");
 
     int* map = (int*) malloc(xSize * ySize * sizeof(int));
     loadMap("maps/dev_test.tilemap", xSize, ySize, map);
@@ -177,7 +178,10 @@ void SceneManager::setupScene()
             til->setPosition(glm::vec3(pixelX, pixelY, 0.0));
             til->setDimension(glm::vec3(128.0f, 128.0f, 1.0f)); 
             til->setShader(shader);
-            til->setTexture(texID);
+
+            if (map[pos] == 99) til->setTexture(waterTexture);
+            else til->setTexture(groundTextures);
+
             objects.push_back(til);
         }
      }
