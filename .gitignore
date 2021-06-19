@@ -1,0 +1,7 @@
+dev/Makefile
+dev/CMakeFiles/*
+dev/CMakeCache.txt
+dev/app
+dev/cmake_install.cmake
+dev/compile_commands.json
+dev/.cache/*

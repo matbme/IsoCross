@@ -57,12 +57,9 @@ void SceneManager::initializeGraphics()
 	// Build and compile our shader program
 	addShader("shaders/transformations.vs", "shaders/transformations.frag");
 
-	//setup the scene -- LEMBRANDO QUE A DESCRIÇÃO DE UMA CENA PODE VIR DE ARQUIVO(S) DE 
-	// CONFIGURAÇÃO
 	setupScene();
 
-	resized = true; //para entrar no setup da câmera na 1a vez
-
+	resized = true;
 }
 
 void SceneManager::addShader(string vFilename, string fFilename)
@@ -171,7 +168,8 @@ void SceneManager::setupScene()
 
     for (int i = xSize - 1 ; i >= 0 ; i--) {
         for (int j = ySize - 1 ; j >= 0 ; j--) {
-            til = new Tile(Tile::TileTexture(map[i * xSize + j]));
+            int pos = (xSize - 1 - i) * xSize + (ySize - 1 - j);
+            til = new Tile(Tile::TileTexture(map[pos]));
 
             GLfloat pixelX = topX + ((i-j) * 128.0f/2);
             GLfloat pixelY = topY + ((i+j) * 128.0f/4);
@@ -192,7 +190,6 @@ void SceneManager::setupScene()
 	ortho2D[2] = 0.0f; //yMin
 	ortho2D[3] = 1080.0f; //yMax
 
-	//Habilita transparência
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -200,14 +197,12 @@ void SceneManager::setupScene()
 
 void SceneManager::setupCamera2D() //TO DO: parametrizar aqui
 {
-	float zNear = -1.0, zFar = 1.0; //estão fixos porque não precisamos mudar
+	float zNear = -1.0, zFar = 1.0;
 
 	projection = glm::ortho(ortho2D[0], ortho2D[1], ortho2D[2], ortho2D[3], zNear, zFar);
 
 
-	//Obtendo o identificador da matriz de projeção para enviar para o shader
 	GLint projLoc = glGetUniformLocation(shader->ID, "projection");
-	//Enviando a matriz de projeção para o shader
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 }
 
