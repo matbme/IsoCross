@@ -1,0 +1,3 @@
+/Users/matbme/Documents/GitHub/TesteGB/dev/CMakeFiles/rebuild_cache.dir
+/Users/matbme/Documents/GitHub/TesteGB/dev/CMakeFiles/edit_cache.dir
+/Users/matbme/Documents/GitHub/TesteGB/dev/CMakeFiles/app.dir

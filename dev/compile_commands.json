@@ -1,0 +1,32 @@
+[
+{
+  "directory": "/Users/matbme/Documents/GitHub/TesteGB/dev",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -I/Users/matbme/Documents/GitHub/TesteGB/dev/include -isystem /usr/local/include -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.0.sdk -o CMakeFiles/app.dir/src/SceneManager.cpp.o -c /Users/matbme/Documents/GitHub/TesteGB/dev/src/SceneManager.cpp",
+  "file": "/Users/matbme/Documents/GitHub/TesteGB/dev/src/SceneManager.cpp"
+},
+{
+  "directory": "/Users/matbme/Documents/GitHub/TesteGB/dev",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -I/Users/matbme/Documents/GitHub/TesteGB/dev/include -isystem /usr/local/include -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.0.sdk -o CMakeFiles/app.dir/src/Source.cpp.o -c /Users/matbme/Documents/GitHub/TesteGB/dev/src/Source.cpp",
+  "file": "/Users/matbme/Documents/GitHub/TesteGB/dev/src/Source.cpp"
+},
+{
+  "directory": "/Users/matbme/Documents/GitHub/TesteGB/dev",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -I/Users/matbme/Documents/GitHub/TesteGB/dev/include -isystem /usr/local/include -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.0.sdk -o CMakeFiles/app.dir/src/Sprite.cpp.o -c /Users/matbme/Documents/GitHub/TesteGB/dev/src/Sprite.cpp",
+  "file": "/Users/matbme/Documents/GitHub/TesteGB/dev/src/Sprite.cpp"
+},
+{
+  "directory": "/Users/matbme/Documents/GitHub/TesteGB/dev",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -I/Users/matbme/Documents/GitHub/TesteGB/dev/include -isystem /usr/local/include -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.0.sdk -o CMakeFiles/app.dir/src/Tile.cpp.o -c /Users/matbme/Documents/GitHub/TesteGB/dev/src/Tile.cpp",
+  "file": "/Users/matbme/Documents/GitHub/TesteGB/dev/src/Tile.cpp"
+},
+{
+  "directory": "/Users/matbme/Documents/GitHub/TesteGB/dev",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -I/Users/matbme/Documents/GitHub/TesteGB/dev/include -isystem /usr/local/include -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.0.sdk -o CMakeFiles/app.dir/src/stb_image.cpp.o -c /Users/matbme/Documents/GitHub/TesteGB/dev/src/stb_image.cpp",
+  "file": "/Users/matbme/Documents/GitHub/TesteGB/dev/src/stb_image.cpp"
+},
+{
+  "directory": "/Users/matbme/Documents/GitHub/TesteGB/dev",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/cc  -I/Users/matbme/Documents/GitHub/TesteGB/dev/include -isystem /usr/local/include -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.0.sdk -o CMakeFiles/app.dir/src/glad.c.o -c /Users/matbme/Documents/GitHub/TesteGB/dev/src/glad.c",
+  "file": "/Users/matbme/Documents/GitHub/TesteGB/dev/src/glad.c"
+}
+]
