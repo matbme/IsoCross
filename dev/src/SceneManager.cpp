@@ -158,35 +158,20 @@ void SceneManager::setupScene()
     GLfloat topX = 960.0f;
     GLfloat topY = 120.0f;
 
-    Tile *til;
-
-    unsigned int groundTextures = loadTexture("textures/basic_ground_tiles.png");
-    unsigned int waterTexture = loadTexture("textures/water.png");
-
     int* map = (int*) malloc(xSize * ySize * sizeof(int));
     loadMap("maps/dev_test.tilemap", xSize, ySize, map);
-    
+    makeTilemap(xSize, ySize, topX, topY, map);
 
-    for (int i = xSize - 1 ; i >= 0 ; i--) {
-        for (int j = ySize - 1 ; j >= 0 ; j--) {
-            int pos = (xSize - 1 - i) * xSize + (ySize - 1 - j);
-            til = new Tile(Tile::TileTexture(map[pos]));
+    free(map);
 
-            GLfloat pixelX = topX + ((i-j) * 128.0f/2);
-            GLfloat pixelY = topY + ((i+j) * 128.0f/4);
+    topX = 960.0f;
+    topY = 180.0f;
 
-            til->setPosition(glm::vec3(pixelX, pixelY, 0.0));
-            til->setDimension(glm::vec3(128.0f, 128.0f, 1.0f)); 
-            til->setShader(shader);
+    map = (int*) malloc(xSize * ySize * sizeof(int));
+    loadMap("maps/dev_test_top.tilemap", xSize, ySize, map);
+    makeTilemap(xSize, ySize, topX, topY, map);
 
-            if (map[pos] == 99) til->setTexture(waterTexture);
-            else til->setTexture(groundTextures);
-
-            objects.push_back(til);
-        }
-     }
-
-     free(map);
+    free(map);
 
 	//Definindo a janela do mundo (ortho2D)
 	ortho2D[0] = 0.0f; //xMin
@@ -197,6 +182,35 @@ void SceneManager::setupScene()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+}
+
+void SceneManager::makeTilemap(int xSize, int ySize, GLfloat startX, GLfloat startY, int* map) {
+    Tile *til;
+
+    unsigned int groundTextures = loadTexture("textures/basic_ground_tiles.png");
+    unsigned int waterTexture = loadTexture("textures/water.png");
+
+    for (int i = xSize - 1 ; i >= 0 ; i--) {
+        for (int j = ySize - 1 ; j >= 0 ; j--) {
+            int pos = (xSize - 1 - i) * xSize + (ySize - 1 - j);
+
+            if (map[pos] != Tile::TileTexture::nothing) {
+                til = new Tile(Tile::TileTexture(map[pos]));
+
+                GLfloat pixelX = startX + ((i-j) * 128.0f/2);
+                GLfloat pixelY = startY + ((i+j) * 128.0f/4);
+
+                til->setPosition(glm::vec3(pixelX, pixelY, 0.0));
+                til->setDimension(glm::vec3(128.0f, 128.0f, 1.0f)); 
+                til->setShader(shader);
+
+                if (map[pos] == Tile::TileTexture::water) til->setTexture(waterTexture);
+                else til->setTexture(groundTextures);
+
+                objects.push_back(til);
+            }
+        }
+     }
 }
 
 void SceneManager::setupCamera2D() //TO DO: parametrizar aqui
@@ -263,7 +277,6 @@ void SceneManager::loadMap(string filename, int mapSizeX, int mapSizeY, int* map
     if (mapFile.is_open()) {
         while (mapFile.good() && countRow < mapSizeY) {
             mapFile >> rawFile;
-            std::cout << rawFile << std::endl;
 
             for (int j = 0 ; j < mapSizeX ; j++) {
                 map[countRow * mapSizeX + j] = std::stoi(rawFile.substr(j*2, 2));

@@ -45,6 +45,7 @@ public:
 	void setupCamera2D();
 	unsigned int loadTexture(string filename); 
 
+    void makeTilemap(int xSize, int ySize, GLfloat startX, GLfloat startY, int* map);
     void loadMap(string filename, int mapSizeX, int mapSizeY, int* map);
 
 private:

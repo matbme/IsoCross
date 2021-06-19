@@ -3,7 +3,7 @@
 Tile::Tile(TileTexture texMap) { initialize(texMap); }
 
 void Tile::initialize(TileTexture texMap) {
-    if (texMap == 99) return Sprite::initialize();
+    if (texMap == Tile::TileTexture::water) return Sprite::initialize();
 
     float bot_left[2]   = {(texMap % 8 * 128) / 1024.0,
                            (floor(texMap / 8) * 128) / 896.0};

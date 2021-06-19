@@ -14,13 +14,16 @@
 
 class Tile : public Sprite {
 public:
+    // Compiler: Complains 'static' is not permitted on type declaration
+    // Compiler: Compiles anyway
     static enum TileTexture {
+        nothing = 99,
         // ground types
         spiky_grass = 48,
         grass = 49,
         stone = 50,
         dirt = 51,
-        water = 99, //separate file
+        water = 56, //separate file
         // fences
         grassy_fence_back_right = 0,
         fence_back_right = 1,
