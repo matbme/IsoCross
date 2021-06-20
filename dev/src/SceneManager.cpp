@@ -21,6 +21,11 @@ static int ySize = 12;
 static GLfloat tilemapX = 960.0f;
 static GLfloat tilemapY = 120.0f;
 
+// Textures
+static unsigned int waterTexture;
+static unsigned int emptyTexture;
+static unsigned int groundTextures;
+
 SceneManager::SceneManager()
 {
 }
@@ -139,6 +144,14 @@ void SceneManager::update()
         if (selectorPos[1] != xSize - 1)
             selectorPos[1]++;
     }
+
+    if (keys[GLFW_KEY_SPACE] && !keylock[GLFW_KEY_SPACE]) {
+        keylock[GLFW_KEY_SPACE] = true;
+
+        int pos = selectorPos[0] * xSize + selectorPos[1];
+        std::cout << pos << std::endl;
+        bottomMap[pos] = Tile::TileTexture::stone;
+    }
 }
 
 void SceneManager::render()
@@ -154,20 +167,49 @@ void SceneManager::render()
 		resized = false;
 	}
 
+    // Update selector position
     GLfloat selectorX = tilemapX + (((xSize-1-selectorPos[0]) - (ySize-1-selectorPos[1])) * 128.0f/2);
     GLfloat selectorY = tilemapY + (((xSize-1-selectorPos[0]) + (ySize-1-selectorPos[1])) * 128.0f/4);
-
     objects[xSize*ySize]->setPosition(glm::vec3(selectorX, selectorY, 0.0));
 
-	//atualiza e desenha os Sprites
-
-	for (int i = 0; i < objects.size(); i++)
+    // Update bottom tilemap
+	for (int i = 0 ; i < (objects.size()-1) / 2 ; i++)
 	{
+        if (Tile::TileTexture(bottomMap[i]) != ((Tile *) objects[i])->texMap) {
+            Tile *replacement = new Tile(Tile::TileTexture(bottomMap[i]));
+
+
+            replacement->setPosition(objects[i]->getPosition());
+            replacement->setDimension(objects[i]->getDimension());
+
+            if (bottomMap[i] == Tile::TileTexture::water) {
+                replacement->setTexture(waterTexture);
+            } else if (bottomMap[i] == Tile::TileTexture::nothing) {
+                replacement->setTexture(emptyTexture);
+            }
+            else {
+                replacement->setTexture(groundTextures);
+            }
+
+            replacement->setShader(objects[i]->getShader());
+
+            objects[i] = replacement;
+        }
+
 		objects[i]->update();
 		objects[i]->draw();
 	}
 	
+    // Update top tilemap
+	for (int i = (objects.size()-1) / 2 ; i < objects.size() ; i++)
+	{
+        /* if (topMapChanged) {
+            setTextureForTile((Tile *) objects[i], topMap[xSize * ySize - i]);
+        } */
 
+		objects[i]->update();
+		objects[i]->draw();
+	}
 }
 
 void SceneManager::run()
@@ -199,6 +241,10 @@ void SceneManager::finish()
 
 void SceneManager::setupScene()
 {
+    // Load textures
+    waterTexture = loadTexture("textures/water.png");
+    emptyTexture = loadTexture("textures/Nothing.png");
+    groundTextures = loadTexture("textures/basic_ground_tiles.png");
 
     bottomMap = (int*) malloc(xSize * ySize * sizeof(int));
     loadMap("maps/dev_test.tilemap", xSize, ySize, bottomMap);
@@ -231,15 +277,11 @@ void SceneManager::setupScene()
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 }
 
 void SceneManager::makeTilemap(int xSize, int ySize, GLfloat startX, GLfloat startY, int* map) {
     Tile *til;
 
-    unsigned int groundTextures = loadTexture("textures/basic_ground_tiles.png");
-    unsigned int waterTexture = loadTexture("textures/water.png");
-    unsigned int emptyTexture = loadTexture("textures/Nothing.png");
 
     for (int i = xSize - 1 ; i >= 0 ; i--) {
         for (int j = ySize - 1 ; j >= 0 ; j--) {
@@ -251,11 +293,17 @@ void SceneManager::makeTilemap(int xSize, int ySize, GLfloat startX, GLfloat sta
 
             til->setPosition(glm::vec3(pixelX, pixelY, 0.0));
             til->setDimension(glm::vec3(128.0f, 128.0f, 1.0f)); 
-            til->setShader(shader);
 
-            if (map[pos] == Tile::TileTexture::water) til->setTexture(waterTexture);
-            else if (map[pos] == Tile::TileTexture::nothing) til->setTexture(emptyTexture);
-            else til->setTexture(groundTextures);
+            if (map[pos] == Tile::TileTexture::water) {
+                til->setTexture(waterTexture);
+            } else if (map[pos] == Tile::TileTexture::nothing) {
+                til->setTexture(emptyTexture);
+            }
+            else {
+                til->setTexture(groundTextures);
+            }
+
+            til->setShader(shader);
 
             objects.push_back(til);
         }

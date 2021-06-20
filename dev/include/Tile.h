@@ -45,6 +45,8 @@ public:
         selector = 57, // separate file
     };
 
+    TileTexture texMap;
+
     Tile(TileTexture texMap);
     ~Tile();
 
