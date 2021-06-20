@@ -41,6 +41,8 @@ public:
         fence_corner_right = 13,
         grassy_fence_corner_left = 14,
         fence_corner_left = 15,
+        // Selector highlight
+        selector = 57, // separate file
     };
 
     Tile(TileTexture texMap);

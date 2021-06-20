@@ -1,9 +1,25 @@
 #include "SceneManager.h"
 
-//static controllers for mouse and keyboard
+// Static controllers for mouse and keyboard
 static bool keys[1024];
+static bool keylock[1024];
 static bool resized;
 static GLuint width, height;
+
+// Map matrices
+static int* topMap;
+static int* bottomMap;
+
+// Selector position (x, y)
+static int selectorPos[2] = {0, 0};
+
+// Tilemap sise
+static int xSize = 12;
+static int ySize = 12;
+
+// Tilemap start position
+static GLfloat tilemapX = 960.0f;
+static GLfloat tilemapY = 120.0f;
 
 SceneManager::SceneManager()
 {
@@ -74,10 +90,13 @@ void SceneManager::key_callback(GLFWwindow * window, int key, int scancode, int 
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	if (key >= 0 && key < 1024)
 	{
-		if (action == GLFW_PRESS)
+		if (action == GLFW_PRESS) {
 			keys[key] = true;
-		else if (action == GLFW_RELEASE)
+        }
+		else if (action == GLFW_RELEASE) {
 			keys[key] = false;
+            keylock[key] = false;
+        }
 	}
 }
 
@@ -97,6 +116,29 @@ void SceneManager::update()
 	if (keys[GLFW_KEY_ESCAPE])
 		glfwSetWindowShouldClose(window, GL_TRUE);
 
+    if (keys[GLFW_KEY_UP] && !keylock[GLFW_KEY_UP]) {
+        keylock[GLFW_KEY_UP] = true;
+        if (selectorPos[0] != 0)
+            selectorPos[0]--;
+    }
+
+    if (keys[GLFW_KEY_DOWN] && !keylock[GLFW_KEY_DOWN]) {
+        keylock[GLFW_KEY_DOWN] = true;
+        if (selectorPos[0] != ySize - 1)
+            selectorPos[0]++;
+    }
+
+    if (keys[GLFW_KEY_LEFT] && !keylock[GLFW_KEY_LEFT]) {
+        keylock[GLFW_KEY_LEFT] = true;
+        if (selectorPos[1] != 0)
+            selectorPos[1]--;
+    }
+
+    if (keys[GLFW_KEY_RIGHT] && !keylock[GLFW_KEY_RIGHT]) {
+        keylock[GLFW_KEY_RIGHT] = true;
+        if (selectorPos[1] != xSize - 1)
+            selectorPos[1]++;
+    }
 }
 
 void SceneManager::render()
@@ -111,6 +153,11 @@ void SceneManager::render()
 		setupCamera2D();
 		resized = false;
 	}
+
+    GLfloat selectorX = tilemapX + (((xSize-1-selectorPos[0]) - (ySize-1-selectorPos[1])) * 128.0f/2);
+    GLfloat selectorY = tilemapY + (((xSize-1-selectorPos[0]) + (ySize-1-selectorPos[1])) * 128.0f/4);
+
+    objects[xSize*ySize]->setPosition(glm::vec3(selectorX, selectorY, 0.0));
 
 	//atualiza e desenha os Sprites
 
@@ -152,26 +199,29 @@ void SceneManager::finish()
 
 void SceneManager::setupScene()
 {
-    int xSize = 12;
-    int ySize = 12;
 
-    GLfloat topX = 960.0f;
-    GLfloat topY = 120.0f;
+    bottomMap = (int*) malloc(xSize * ySize * sizeof(int));
+    loadMap("maps/dev_test.tilemap", xSize, ySize, bottomMap);
+    makeTilemap(xSize, ySize, tilemapX, tilemapY, bottomMap);
 
-    int* map = (int*) malloc(xSize * ySize * sizeof(int));
-    loadMap("maps/dev_test.tilemap", xSize, ySize, map);
-    makeTilemap(xSize, ySize, topX, topY, map);
+    // Selector tile
+    Tile* selector = new Tile(Tile::TileTexture::selector);
 
-    free(map);
+    GLfloat selectorX = tilemapX + (((xSize-1-selectorPos[0]) - (ySize-1-selectorPos[1])) * 128.0f/2);
+    GLfloat selectorY = tilemapY + (((xSize-1-selectorPos[0]) + (ySize-1-selectorPos[1])) * 128.0f/4);
 
-    topX = 960.0f;
-    topY = 180.0f;
+    unsigned int selectorTexture = loadTexture("textures/Selector.png");
 
-    map = (int*) malloc(xSize * ySize * sizeof(int));
-    loadMap("maps/dev_test_top.tilemap", xSize, ySize, map);
-    makeTilemap(xSize, ySize, topX, topY, map);
+    selector->setPosition(glm::vec3(selectorX, selectorY, 0.0));
+    selector->setDimension(glm::vec3(128.0f, 128.0f, 1.0f));
+    selector->setShader(shader);
+    selector->setTexture(selectorTexture);
+    objects.push_back(selector);
 
-    free(map);
+    // Top tilemap
+    topMap = (int*) malloc(xSize * ySize * sizeof(int));
+    loadMap("maps/dev_test_top.tilemap", xSize, ySize, topMap);
+    makeTilemap(xSize, ySize, tilemapX, tilemapY + 60.0f, topMap);
 
 	//Definindo a janela do mundo (ortho2D)
 	ortho2D[0] = 0.0f; //xMin
