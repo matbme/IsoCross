@@ -1,23 +1,42 @@
 #include "Tile.h"
+#include "Character.h"
 
 Tile::Tile(TileTexture texMap) { initialize(texMap); }
 
 void Tile::initialize(TileTexture texMap) {
     this->texMap = texMap;
 
-    if (texMap >= Tile::TileTexture::water) return Sprite::initialize();
+    if (texMap == Tile::TileTexture::water) return Sprite::initialize();
+    if (texMap == Tile::TileTexture::selector) return Sprite::initialize();
 
-    float bot_left[2]   = {(texMap % 8 * 128) / 1024.0,
-                           (floor(texMap / 8) * 128) / 896.0};
+    int textureWidth, textureHeight, spriteRows;
+    float texMapWidth, texMapHeight;
 
-    float bot_right[2]  = {(texMap % 8 * 128 + 128) / 1024.0,
-                           (floor(texMap / 8) * 128) / 896.0};
+    if (texMap >= Tile::TileTexture::enemy_idle) {
+        textureWidth = 45;
+        textureHeight = 50;
+        texMapWidth = 630.0;
+        texMapHeight = 100.0;
+        spriteRows = 14;
+    } else {
+        textureWidth = 128;
+        textureHeight = 128;
+        texMapWidth = 1024.0;
+        texMapHeight = 896.0;
+        spriteRows = 8;
+    }
 
-    float top_left[2]   = {(texMap % 8 * 128) / 1024.0,
-                           (floor(texMap / 8) * 128 + 128) / 896.0};
+    float bot_left[2]   = {(texMap % spriteRows * textureWidth) / texMapWidth,
+                           (floor(texMap / spriteRows) * textureHeight) / texMapHeight};
 
-    float top_right[2]  = {(texMap % 8 * 128 + 128) / 1024.0,
-                           (floor(texMap / 8) * 128 + 128) / 896.0};
+    float bot_right[2]  = {(texMap % spriteRows * textureWidth + textureWidth) / texMapWidth,
+                           (floor(texMap / spriteRows) * textureHeight) / texMapHeight};
+
+    float top_left[2]   = {(texMap % spriteRows * textureWidth) / texMapWidth,
+                           (floor(texMap / spriteRows) * textureHeight + textureHeight) / texMapHeight};
+
+    float top_right[2]  = {(texMap % spriteRows * textureWidth + textureWidth) / texMapWidth,
+                           (floor(texMap / spriteRows) * textureHeight + textureHeight) / texMapHeight};
 
     float vertices[] = {
         // positions          // colors           // texture coords

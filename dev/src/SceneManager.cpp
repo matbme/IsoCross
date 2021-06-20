@@ -25,6 +25,7 @@ static GLfloat tilemapY = 120.0f;
 static unsigned int waterTexture;
 static unsigned int emptyTexture;
 static unsigned int groundTextures;
+static unsigned int playerTextures;
 
 SceneManager::SceneManager()
 {
@@ -248,6 +249,7 @@ void SceneManager::setupScene()
     waterTexture = loadTexture("textures/water.png");
     emptyTexture = loadTexture("textures/Nothing.png");
     groundTextures = loadTexture("textures/basic_ground_tiles.png");
+    playerTextures = loadTexture("textures/characters_reduced.png");
 
     bottomMap = (int*) malloc(xSize * ySize * sizeof(int));
     loadMap("maps/dev_test.tilemap", xSize, ySize, bottomMap);
@@ -283,13 +285,16 @@ void SceneManager::setupScene()
 }
 
 void SceneManager::makeTilemap(int xSize, int ySize, GLfloat startX, GLfloat startY, int* map) {
-    Tile *til;
-
+    Sprite *til;
 
     for (int i = xSize - 1 ; i >= 0 ; i--) {
         for (int j = ySize - 1 ; j >= 0 ; j--) {
             int pos = (xSize - 1 - i) * xSize + (ySize - 1 - j);
-            til = new Tile(Tile::TileTexture(map[pos]));
+
+            if (map[pos] >= Tile::TileTexture::enemy_idle)
+                til = new Character(Tile::TileTexture(map[pos]));
+            else
+                til = new Tile(Tile::TileTexture(map[pos]));
 
             GLfloat pixelX = startX + ((i-j) * 128.0f/2);
             GLfloat pixelY = startY + ((i+j) * 128.0f/4);
@@ -301,8 +306,9 @@ void SceneManager::makeTilemap(int xSize, int ySize, GLfloat startX, GLfloat sta
                 til->setTexture(waterTexture);
             } else if (map[pos] == Tile::TileTexture::nothing) {
                 til->setTexture(emptyTexture);
-            }
-            else {
+            } else if (map[pos] >= Tile::TileTexture::enemy_idle) {
+                til->setTexture(playerTextures);
+            } else {
                 til->setTexture(groundTextures);
             }
 

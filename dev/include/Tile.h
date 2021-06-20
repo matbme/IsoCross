@@ -43,12 +43,37 @@ public:
         fence_corner_left = 15,
         // Selector highlight
         selector = 57, // separate file
+        // Characters
+        enemy_idle = 58,
+        enemy_go_left = 59,
+        enemy_go_down = 60,
+        enemy_go_right = 61,
+        enemy_go_up = 62,
+        enemy_walk_left_start = 63,
+        enemy_walk_left_mid = 64,
+        enemy_walk_left_end = 65,
+        enemy_walk_right_start = 67,
+        enemy_walk_right_mid = 68,
+        enemy_walk_right_end = 69,
+        player_idle = 72,
+        player_go_left = 73,
+        player_go_down = 74,
+        player_go_right = 75,
+        player_go_up = 80,
+        player_walk_left_start = 77,
+        player_walk_left_mid = 78,
+        player_walk_left_end = 79,
+        player_walk_right_start = 81,
+        player_walk_right_mid = 82,
+        player_walk_right_end = 83,
+        player_hit = 84,
+        player_dead = 85,
     };
 
     TileTexture texMap;
 
     Tile(TileTexture texMap);
-    ~Tile();
+    ~Tile() {}
 
     void initialize(TileTexture texMap);
 };

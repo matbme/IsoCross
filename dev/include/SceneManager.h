@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "Sprite.h" 
 #include "Tile.h"
+#include "Character.h"
 
 #include <iostream>
 #include <fstream>
