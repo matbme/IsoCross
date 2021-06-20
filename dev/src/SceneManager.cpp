@@ -149,8 +149,11 @@ void SceneManager::update()
         keylock[GLFW_KEY_SPACE] = true;
 
         int pos = selectorPos[0] * xSize + selectorPos[1];
-        std::cout << pos << std::endl;
-        bottomMap[pos] = Tile::TileTexture::stone;
+        if (bottomMap[pos] != Tile::TileTexture::water) {
+            if (bottomMap[pos] == Tile::TileTexture::stone)
+                bottomMap[pos] = Tile::TileTexture::grass;
+            else bottomMap[pos] = Tile::TileTexture::stone;
+        }
     }
 }
 
