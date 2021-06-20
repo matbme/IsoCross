@@ -239,26 +239,25 @@ void SceneManager::makeTilemap(int xSize, int ySize, GLfloat startX, GLfloat sta
 
     unsigned int groundTextures = loadTexture("textures/basic_ground_tiles.png");
     unsigned int waterTexture = loadTexture("textures/water.png");
+    unsigned int emptyTexture = loadTexture("textures/Nothing.png");
 
     for (int i = xSize - 1 ; i >= 0 ; i--) {
         for (int j = ySize - 1 ; j >= 0 ; j--) {
             int pos = (xSize - 1 - i) * xSize + (ySize - 1 - j);
+            til = new Tile(Tile::TileTexture(map[pos]));
 
-            if (map[pos] != Tile::TileTexture::nothing) {
-                til = new Tile(Tile::TileTexture(map[pos]));
+            GLfloat pixelX = startX + ((i-j) * 128.0f/2);
+            GLfloat pixelY = startY + ((i+j) * 128.0f/4);
 
-                GLfloat pixelX = startX + ((i-j) * 128.0f/2);
-                GLfloat pixelY = startY + ((i+j) * 128.0f/4);
+            til->setPosition(glm::vec3(pixelX, pixelY, 0.0));
+            til->setDimension(glm::vec3(128.0f, 128.0f, 1.0f)); 
+            til->setShader(shader);
 
-                til->setPosition(glm::vec3(pixelX, pixelY, 0.0));
-                til->setDimension(glm::vec3(128.0f, 128.0f, 1.0f)); 
-                til->setShader(shader);
+            if (map[pos] == Tile::TileTexture::water) til->setTexture(waterTexture);
+            else if (map[pos] == Tile::TileTexture::nothing) til->setTexture(emptyTexture);
+            else til->setTexture(groundTextures);
 
-                if (map[pos] == Tile::TileTexture::water) til->setTexture(waterTexture);
-                else til->setTexture(groundTextures);
-
-                objects.push_back(til);
-            }
+            objects.push_back(til);
         }
      }
 }
