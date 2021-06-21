@@ -26,6 +26,7 @@ static unsigned int waterTexture;
 static unsigned int emptyTexture;
 static unsigned int groundTextures;
 static unsigned int playerTextures;
+static unsigned int goalTexture;
 
 // Turn timer
 static bool runningTurns = false;
@@ -63,7 +64,7 @@ void SceneManager::initializeGraphics()
 #endif
 
 	// Create a GLFWwindow object that we can use for GLFW's functions
-	window = glfwCreateWindow(width, height, "Hello Sprites", nullptr, nullptr);
+	window = glfwCreateWindow(width, height, "IsoCross", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 
 	// Set the required callback functions
@@ -232,6 +233,8 @@ void SceneManager::render()
 
             if (topMap[mapPos] == Tile::TileTexture::nothing) {
                 replacement->setTexture(emptyTexture);
+            } else if (topMap[mapPos] == Tile::TileTexture::goal) {
+                replacement->setTexture(goalTexture);
             } else if (topMap[mapPos] >= Tile::TileTexture::enemy_idle) {
                 replacement->setTexture(playerTextures);
             }
@@ -290,6 +293,7 @@ void SceneManager::setupScene()
     emptyTexture = loadTexture("textures/Nothing.png");
     groundTextures = loadTexture("textures/basic_ground_tiles.png");
     playerTextures = loadTexture("textures/characters_reduced.png");
+    goalTexture = loadTexture("textures/Goal.png");
 
     bottomMap = (int*) malloc(xSize * ySize * sizeof(int));
     loadMap("maps/dev_test.tilemap", xSize, ySize, bottomMap);
@@ -346,6 +350,8 @@ void SceneManager::makeTilemap(int xSize, int ySize, GLfloat startX, GLfloat sta
                 til->setTexture(waterTexture);
             } else if (map[pos] == Tile::TileTexture::nothing) {
                 til->setTexture(emptyTexture);
+            } else if (map[pos] == Tile::TileTexture::goal) {
+                til->setTexture(goalTexture);
             } else if (map[pos] >= Tile::TileTexture::enemy_idle) {
                 til->setTexture(playerTextures);
             } else {

@@ -18,6 +18,7 @@ public:
     // Compiler: Compiles anyway
     static enum TileTexture {
         nothing = 99,
+        goal = 98,
         // ground types
         spiky_grass = 48,
         grass = 49,

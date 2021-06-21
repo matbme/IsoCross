@@ -8,6 +8,7 @@ void Tile::initialize(TileTexture texMap) {
 
     if (texMap == Tile::TileTexture::water) return Sprite::initialize();
     if (texMap == Tile::TileTexture::selector) return Sprite::initialize();
+    if (texMap == Tile::TileTexture::goal) return Sprite::initialize();
 
     int textureWidth, textureHeight, spriteRows, mapOffset;
     float texMapWidth, texMapHeight;
