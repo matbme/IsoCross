@@ -30,6 +30,7 @@ public:
         stop = 0,
         move = 1,
         dead = 2,
+        win = 3,
     };
 
     Movement getLastMove();

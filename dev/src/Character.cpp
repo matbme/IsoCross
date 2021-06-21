@@ -25,10 +25,15 @@ Character::NextState Character::followPath(int* bottomMap, int* topMap, int posi
             topMap[pos + xSize - 1] == Tile::TileTexture::enemy_go_up) {
             state = Character::NextState::dead;
         } else {
-            topMap[pos - 1] = Tile::TileTexture::player_go_left;
-            topMap[pos] = Tile::TileTexture::nothing;
-            Character::setLastMove(Character::Movement::left);
-            state = Character::NextState::move;
+            // does he win?
+            if (topMap[pos - 1] == Tile::TileTexture::goal) {
+                state = Character::NextState::win;
+            } else {
+                topMap[pos - 1] = Tile::TileTexture::player_go_left;
+                topMap[pos] = Tile::TileTexture::nothing;
+                Character::setLastMove(Character::Movement::left);
+                state = Character::NextState::move;
+            }
         }
     }
     // try up
@@ -38,10 +43,14 @@ Character::NextState Character::followPath(int* bottomMap, int* topMap, int posi
             topMap[pos - xSize + 1] == Tile::TileTexture::enemy_go_right) {
             state = Character::NextState::dead;
         } else {
-            topMap[pos - xSize] = Tile::TileTexture::player_go_up;
-            topMap[pos] = Tile::TileTexture::nothing;
-            Character::setLastMove(Character::Movement::up);
-            state = Character::NextState::move;
+            if (topMap[pos - xSize] == Tile::TileTexture::goal) {
+                state = Character::NextState::win;
+            } else {
+                topMap[pos - xSize] = Tile::TileTexture::player_go_up;
+                topMap[pos] = Tile::TileTexture::nothing;
+                Character::setLastMove(Character::Movement::up);
+                state = Character::NextState::move;
+            }
         }
     }
     // try right
@@ -51,10 +60,14 @@ Character::NextState Character::followPath(int* bottomMap, int* topMap, int posi
             topMap[pos + xSize + 1] == Tile::TileTexture::enemy_go_up) {
             state = Character::NextState::dead;
         } else {
-            topMap[pos + 1] = Tile::TileTexture::player_go_right;
-            topMap[pos] = Tile::TileTexture::nothing;
-            Character::setLastMove(Character::Movement::right);
-            state = Character::NextState::move;
+            if (topMap[pos + 1] == Tile::TileTexture::goal) {
+                state = Character::NextState::win;
+            } else {
+                topMap[pos + 1] = Tile::TileTexture::player_go_right;
+                topMap[pos] = Tile::TileTexture::nothing;
+                Character::setLastMove(Character::Movement::right);
+                state = Character::NextState::move;
+            }
         }
     }
     // try down
@@ -64,10 +77,14 @@ Character::NextState Character::followPath(int* bottomMap, int* topMap, int posi
             topMap[pos + xSize + 1] == Tile::TileTexture::enemy_go_left) {
             state = Character::NextState::dead;
         } else {
-            topMap[pos + xSize] = Tile::TileTexture::player_go_down;
-            topMap[pos] = Tile::TileTexture::nothing;
-            Character::setLastMove(Character::Movement::down);
-            state = Character::NextState::move;
+            if (topMap[pos + xSize] == Tile::TileTexture::goal) {
+                state = Character::NextState::win;
+            } else {
+                topMap[pos + xSize] = Tile::TileTexture::player_go_down;
+                topMap[pos] = Tile::TileTexture::nothing;
+                Character::setLastMove(Character::Movement::down);
+                state = Character::NextState::move;
+            }
         }
     }
 

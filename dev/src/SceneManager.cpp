@@ -131,21 +131,13 @@ void SceneManager::update()
 	if (keys[GLFW_KEY_ESCAPE])
 		glfwSetWindowShouldClose(window, GL_TRUE);
 
-    if(win == true || loose == true){
-         return;
-    }
-
-    if (keys[GLFW_KEY_W] && !keylock[GLFW_KEY_W]) {
-        keylock[GLFW_KEY_W] = true;
-        win = true;
+    if (win) {
         create_win_object("textures/win.png");
         return;
     }
 
-    if (keys[GLFW_KEY_L] && !keylock[GLFW_KEY_L]) {
-        keylock[GLFW_KEY_L] = true;
-        loose = true;
-        create_win_object("textures/loose.png");
+    if (loose) {
+        create_win_object("textures/lose.png");
         return;
     }
 
@@ -211,7 +203,7 @@ void SceneManager::render()
 		resized = false;
 	}
 
-    if(win == true || loose == true ){
+    if (win || loose) {
         objects[objects.size()-1]->update();
 		objects[objects.size()-1]->draw();
         return;
@@ -484,6 +476,9 @@ void SceneManager::runTurn() {
     }
 
     if (state == Character::NextState::stop) runningTurns = false;
+    else if (state == Character::NextState::dead) loose = true;
+    else if (state == Character::NextState::win) win = true;
+
     turnTick = glfwGetTime();
 }
 
