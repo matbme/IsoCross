@@ -156,6 +156,20 @@ void SceneManager::update()
             else bottomMap[pos] = Tile::TileTexture::stone;
         }
     }
+
+    if (keys[GLFW_KEY_ENTER] && !keylock[GLFW_KEY_ENTER]) {
+        keylock[GLFW_KEY_ENTER] = true;
+
+        int pos = 0;
+        for (auto object : objects) {
+            if (((Tile *)object)->texMap >= Tile::TileTexture::player_idle &&
+                ((Tile *)object)->texMap != Tile::TileTexture::nothing) {
+                ((Character *)object)->followPath(bottomMap, topMap, pos-(xSize*ySize), xSize);
+            }
+
+            pos++;
+        }
+    }
 }
 
 void SceneManager::render()
@@ -171,17 +185,12 @@ void SceneManager::render()
 		resized = false;
 	}
 
-    // Update selector position
-    GLfloat selectorX = tilemapX + (((xSize-1-selectorPos[0]) - (ySize-1-selectorPos[1])) * 128.0f/2);
-    GLfloat selectorY = tilemapY + (((xSize-1-selectorPos[0]) + (ySize-1-selectorPos[1])) * 128.0f/4);
-    objects[xSize*ySize]->setPosition(glm::vec3(selectorX, selectorY, 0.0));
 
     // Update bottom tilemap
 	for (int i = 0 ; i < (objects.size()-1) / 2 ; i++)
 	{
         if (Tile::TileTexture(bottomMap[i]) != ((Tile *) objects[i])->texMap) {
             Tile *replacement = new Tile(Tile::TileTexture(bottomMap[i]));
-
 
             replacement->setPosition(objects[i]->getPosition());
             replacement->setDimension(objects[i]->getDimension());
@@ -205,15 +214,43 @@ void SceneManager::render()
 	}
 	
     // Update top tilemap
-	for (int i = (objects.size()-1) / 2 ; i < objects.size() ; i++)
+	for (int i = (xSize*ySize) + 1 ; i < objects.size() ; i++)
 	{
-        /* if (topMapChanged) {
-            setTextureForTile((Tile *) objects[i], topMap[xSize * ySize - i]);
-        } */
+        int mapPos = i - (xSize*ySize + 1);
+        if (Tile::TileTexture(topMap[mapPos]) != ((Tile *) objects[i])->texMap) {
+            Sprite *replacement;
+            if (topMap[mapPos] >= Tile::TileTexture::enemy_idle)
+                replacement = new Character(Tile::TileTexture(topMap[mapPos]));
+            else
+                replacement = new Tile(Tile::TileTexture(topMap[mapPos]));
+
+            replacement->setPosition(objects[i]->getPosition());
+            replacement->setDimension(objects[i]->getDimension());
+
+            if (topMap[mapPos] >= Tile::TileTexture::enemy_idle) {
+                replacement->setTexture(playerTextures);
+            } else if (topMap[mapPos] == Tile::TileTexture::nothing) {
+                replacement->setTexture(emptyTexture);
+            }
+            else {
+                replacement->setTexture(groundTextures);
+            }
+
+            replacement->setShader(objects[i]->getShader());
+
+            objects[i] = replacement;
+        }
 
 		objects[i]->update();
 		objects[i]->draw();
 	}
+    
+    // Update selector position
+    GLfloat selectorX = tilemapX + (((xSize-1-selectorPos[0]) - (ySize-1-selectorPos[1])) * 128.0f/2);
+    GLfloat selectorY = tilemapY + (((xSize-1-selectorPos[0]) + (ySize-1-selectorPos[1])) * 128.0f/4);
+    objects[xSize*ySize]->setPosition(glm::vec3(selectorX, selectorY, 0.0));
+    objects[xSize*ySize]->update();
+    objects[xSize*ySize]->draw();
 }
 
 void SceneManager::run()

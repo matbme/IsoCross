@@ -17,6 +17,8 @@ class Character : public Tile {
 public:
     Character(Tile::TileTexture texMap);
     ~Character();
+
+    void followPath(int* bottomMap, int* topMap, int position, int xSize);
 };
 
 #endif
