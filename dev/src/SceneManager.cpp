@@ -32,6 +32,9 @@ static unsigned int goalTexture;
 static bool runningTurns = false;
 static double turnTick = 0;
 
+static bool loose = false;
+static bool win   = false;
+
 SceneManager::SceneManager()
 {
 }
@@ -124,8 +127,27 @@ void SceneManager::resize(GLFWwindow * window, int w, int h)
 
 void SceneManager::update()
 {
+
 	if (keys[GLFW_KEY_ESCAPE])
 		glfwSetWindowShouldClose(window, GL_TRUE);
+
+    if(win == true || loose == true){
+         return;
+    }
+
+    if (keys[GLFW_KEY_W] && !keylock[GLFW_KEY_W]) {
+        keylock[GLFW_KEY_W] = true;
+        win = true;
+        create_win_object("textures/win.png");
+        return;
+    }
+
+    if (keys[GLFW_KEY_L] && !keylock[GLFW_KEY_L]) {
+        keylock[GLFW_KEY_L] = true;
+        loose = true;
+        create_win_object("textures/loose.png");
+        return;
+    }
 
     if (keys[GLFW_KEY_UP] && !keylock[GLFW_KEY_UP]) {
         keylock[GLFW_KEY_UP] = true;
@@ -173,6 +195,7 @@ void SceneManager::update()
     if (runningTurns) {
         if (glfwGetTime() >= turnTick + 1.0) runTurn();
     }
+
 }
 
 void SceneManager::render()
@@ -188,6 +211,11 @@ void SceneManager::render()
 		resized = false;
 	}
 
+    if(win == true || loose == true ){
+        objects[objects.size()-1]->update();
+		objects[objects.size()-1]->draw();
+        return;
+    }
 
     // Update bottom tilemap
 	for (int i = 0 ; i < (objects.size()-1) / 2 ; i++)
@@ -457,4 +485,17 @@ void SceneManager::runTurn() {
 
     if (state == Character::NextState::stop) runningTurns = false;
     turnTick = glfwGetTime();
+}
+
+
+void SceneManager::create_win_object(string path){
+	Sprite *sprite = new Sprite;
+	unsigned int texID = loadTexture(path);
+
+	sprite->setTexture(texID);
+	sprite->setPosition(glm::vec3(960.0f, 540.0f, 0.0));
+	sprite->setDimension(glm::vec3(1920.0f, 1080.0f, 1.0f));
+	sprite->setShader(shader);
+	objects.push_back(sprite);
+
 }
