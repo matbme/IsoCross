@@ -12,7 +12,7 @@ void Tile::initialize(TileTexture texMap) {
     int textureWidth, textureHeight, spriteRows;
     float texMapWidth, texMapHeight;
 
-    if (texMap >= Tile::TileTexture::enemy_idle) {
+    if (texMap >= Tile::TileTexture::enemy_idle && texMap != Tile::TileTexture::nothing) {
         textureWidth = 45;
         textureHeight = 50;
         texMapWidth = 630.0;
