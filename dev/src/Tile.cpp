@@ -27,16 +27,16 @@ void Tile::initialize(TileTexture texMap) {
     }
 
     float bot_left[2]   = {(texMap % spriteRows * textureWidth) / texMapWidth,
-                           (floor(texMap / spriteRows) * textureHeight) / texMapHeight};
+        static_cast<float> ((floor(texMap / spriteRows) * textureHeight) / texMapHeight)};
 
     float bot_right[2]  = {(texMap % spriteRows * textureWidth + textureWidth) / texMapWidth,
-                           (floor(texMap / spriteRows) * textureHeight) / texMapHeight};
+        static_cast<float> ((floor(texMap / spriteRows) * textureHeight) / texMapHeight)};
 
     float top_left[2]   = {(texMap % spriteRows * textureWidth) / texMapWidth,
-                           (floor(texMap / spriteRows) * textureHeight + textureHeight) / texMapHeight};
+        static_cast<float> ((floor(texMap / spriteRows) * textureHeight + textureHeight) / texMapHeight)};
 
     float top_right[2]  = {(texMap % spriteRows * textureWidth + textureWidth) / texMapWidth,
-                           (floor(texMap / spriteRows) * textureHeight + textureHeight) / texMapHeight};
+        static_cast<float> ((floor(texMap / spriteRows) * textureHeight + textureHeight) / texMapHeight)};
 
     float vertices[] = {
         // positions          // colors           // texture coords

@@ -219,10 +219,11 @@ void SceneManager::render()
         int mapPos = i - (xSize*ySize + 1);
         if (Tile::TileTexture(topMap[mapPos]) != ((Tile *) objects[i])->texMap) {
             Sprite *replacement;
-            if (topMap[mapPos] >= Tile::TileTexture::enemy_idle)
+            if (topMap[mapPos] >= Tile::TileTexture::enemy_idle && topMap[mapPos] != Tile::TileTexture::nothing) {
                 replacement = new Character(Tile::TileTexture(topMap[mapPos]));
-            else
+            } else {
                 replacement = new Tile(Tile::TileTexture(topMap[mapPos]));
+            } 
 
             replacement->setPosition(objects[i]->getPosition());
             replacement->setDimension(objects[i]->getDimension());

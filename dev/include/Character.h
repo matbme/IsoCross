@@ -18,7 +18,21 @@ public:
     Character(Tile::TileTexture texMap);
     ~Character();
 
+    static enum Movement {
+        none = -1,
+        left = 0,
+        right = 1,
+        up = 2,
+        down = 3,
+    };
+
+    Movement getLastMove();
+    void setLastMove(Character::Movement move);
+
     void followPath(int* bottomMap, int* topMap, int position, int xSize);
+
+private:
+    static Movement playerLastMove;
 };
 
 #endif
