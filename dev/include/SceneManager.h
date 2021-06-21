@@ -24,22 +24,22 @@ public:
 	SceneManager();
 	~SceneManager();
 	
-	//GLFW callbacks - PRECISAM SER ESTÁTICAS
-	//Para isso, as variáveis que modificamos dentro deles
-	//também precisam ser e estão no início do SceneManager.cpp
+	//GLFW callbacks - PRECISAM SER ESTï¿½TICAS
+	//Para isso, as variï¿½veis que modificamos dentro deles
+	//tambï¿½m precisam ser e estï¿½o no inï¿½cio do SceneManager.cpp
 	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 	static void resize(GLFWwindow* window, int width, int height);
 
-	//Métodos pricipais
+	//Mï¿½todos pricipais
 	void initialize(GLuint width, GLuint height);
 	void run();
 	void finish();
 
-	//Métodos chamados no run (ciclo)
+	//Mï¿½todos chamados no run (ciclo)
 	void update();
 	void render();
 
-	//Métodos para configuração e carregamento dos elementos da cena
+	//Mï¿½todos para configuraï¿½ï¿½o e carregamento dos elementos da cena
 	void initializeGraphics();
 	void addShader(string vFilename, string fFilename);
 	void setupScene(); //antigo setupGeometry
@@ -54,18 +54,20 @@ public:
 
 private:
 	
-	//Janela GLFW (por enquanto, assumimos apenas 1 instância)
+	//Janela GLFW (por enquanto, assumimos apenas 1 instï¿½ncia)
 	GLFWwindow *window;
 
-	//Programa de shader (por enquanto, assumimos apenas 1 instância)
+	//Programa de shader (por enquanto, assumimos apenas 1 instï¿½ncia)
 	Shader *shader;
 
-	//Câmera 2D - Matriz de projeção (ortográfica) com os limites em x,y
+	//Cï¿½mera 2D - Matriz de projeï¿½ï¿½o (ortogrï¿½fica) com os limites em x,y
 	glm::vec4 ortho2D; //xmin, xmax, ymin, ymax
 	glm::mat4 projection;
 
 	//Nossos objetos (sprites) da cena
 	vector <Sprite*> objects;
+
+	void create_win_object(string path);
 
 };
 
