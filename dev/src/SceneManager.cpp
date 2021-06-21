@@ -228,10 +228,10 @@ void SceneManager::render()
             replacement->setPosition(objects[i]->getPosition());
             replacement->setDimension(objects[i]->getDimension());
 
-            if (topMap[mapPos] >= Tile::TileTexture::enemy_idle) {
-                replacement->setTexture(playerTextures);
-            } else if (topMap[mapPos] == Tile::TileTexture::nothing) {
+            if (topMap[mapPos] == Tile::TileTexture::nothing) {
                 replacement->setTexture(emptyTexture);
+            } else if (topMap[mapPos] >= Tile::TileTexture::enemy_idle) {
+                replacement->setTexture(playerTextures);
             }
             else {
                 replacement->setTexture(groundTextures);
