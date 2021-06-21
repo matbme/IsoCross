@@ -163,9 +163,12 @@ void SceneManager::update()
         int pos = 0;
         for (auto object : objects) {
             if (((Tile *)object)->texMap >= Tile::TileTexture::player_idle &&
-                ((Tile *)object)->texMap != Tile::TileTexture::nothing) {
+                ((Tile *)object)->texMap != Tile::TileTexture::nothing)
                 ((Character *)object)->followPath(bottomMap, topMap, pos-(xSize*ySize), xSize);
-            }
+
+            else if (((Tile *)object)->texMap >= Tile::TileTexture::enemy_idle &&
+                     ((Tile *)object)->texMap <= Tile::TileTexture::player_idle)
+                ((Character *)object)->enemyPatrol(bottomMap, topMap, pos-(xSize*ySize), xSize, ySize);
 
             pos++;
         }

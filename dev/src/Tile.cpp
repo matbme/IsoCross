@@ -9,7 +9,7 @@ void Tile::initialize(TileTexture texMap) {
     if (texMap == Tile::TileTexture::water) return Sprite::initialize();
     if (texMap == Tile::TileTexture::selector) return Sprite::initialize();
 
-    int textureWidth, textureHeight, spriteRows;
+    int textureWidth, textureHeight, spriteRows, mapOffset;
     float texMapWidth, texMapHeight;
 
     if (texMap >= Tile::TileTexture::enemy_idle && texMap != Tile::TileTexture::nothing) {
@@ -18,25 +18,29 @@ void Tile::initialize(TileTexture texMap) {
         texMapWidth = 630.0;
         texMapHeight = 100.0;
         spriteRows = 14;
+        mapOffset = 58;
     } else {
         textureWidth = 128;
         textureHeight = 128;
         texMapWidth = 1024.0;
         texMapHeight = 896.0;
         spriteRows = 8;
+        mapOffset = 0;
     }
 
-    float bot_left[2]   = {(texMap % spriteRows * textureWidth) / texMapWidth,
-        static_cast<float> ((floor(texMap / spriteRows) * textureHeight) / texMapHeight)};
+    int texMapOff = texMap - mapOffset;
 
-    float bot_right[2]  = {(texMap % spriteRows * textureWidth + textureWidth) / texMapWidth,
-        static_cast<float> ((floor(texMap / spriteRows) * textureHeight) / texMapHeight)};
+    float bot_left[2]   = {(texMapOff% spriteRows * textureWidth) / texMapWidth,
+        static_cast<float> ((floor(texMapOff/ spriteRows) * textureHeight) / texMapHeight)};
 
-    float top_left[2]   = {(texMap % spriteRows * textureWidth) / texMapWidth,
-        static_cast<float> ((floor(texMap / spriteRows) * textureHeight + textureHeight) / texMapHeight)};
+    float bot_right[2]  = {(texMapOff% spriteRows * textureWidth + textureWidth) / texMapWidth,
+        static_cast<float> ((floor(texMapOff/ spriteRows) * textureHeight) / texMapHeight)};
 
-    float top_right[2]  = {(texMap % spriteRows * textureWidth + textureWidth) / texMapWidth,
-        static_cast<float> ((floor(texMap / spriteRows) * textureHeight + textureHeight) / texMapHeight)};
+    float top_left[2]   = {(texMapOff% spriteRows * textureWidth) / texMapWidth,
+        static_cast<float> ((floor(texMapOff/ spriteRows) * textureHeight + textureHeight) / texMapHeight)};
+
+    float top_right[2]  = {(texMapOff% spriteRows * textureWidth + textureWidth) / texMapWidth,
+        static_cast<float> ((floor(texMapOff/ spriteRows) * textureHeight + textureHeight) / texMapHeight)};
 
     float vertices[] = {
         // positions          // colors           // texture coords
