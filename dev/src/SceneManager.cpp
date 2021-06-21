@@ -27,6 +27,10 @@ static unsigned int emptyTexture;
 static unsigned int groundTextures;
 static unsigned int playerTextures;
 
+// Turn timer
+static bool runningTurns = false;
+static double turnTick = 0;
+
 SceneManager::SceneManager()
 {
 }
@@ -150,7 +154,9 @@ void SceneManager::update()
         keylock[GLFW_KEY_SPACE] = true;
 
         int pos = selectorPos[0] * xSize + selectorPos[1];
-        if (bottomMap[pos] != Tile::TileTexture::water) {
+        if (!(topMap[pos] >= Tile::TileTexture::grassy_fence_back_right &&
+             topMap[pos] <= Tile::TileTexture::fence_corner_left) &&
+             bottomMap[pos] != Tile::TileTexture::water) {
             if (bottomMap[pos] == Tile::TileTexture::stone)
                 bottomMap[pos] = Tile::TileTexture::grass;
             else bottomMap[pos] = Tile::TileTexture::stone;
@@ -159,19 +165,12 @@ void SceneManager::update()
 
     if (keys[GLFW_KEY_ENTER] && !keylock[GLFW_KEY_ENTER]) {
         keylock[GLFW_KEY_ENTER] = true;
+        runningTurns = true;
+    }
 
-        int pos = 0;
-        for (auto object : objects) {
-            if (((Tile *)object)->texMap >= Tile::TileTexture::player_idle &&
-                ((Tile *)object)->texMap != Tile::TileTexture::nothing)
-                ((Character *)object)->followPath(bottomMap, topMap, pos-(xSize*ySize), xSize);
-
-            else if (((Tile *)object)->texMap >= Tile::TileTexture::enemy_idle &&
-                     ((Tile *)object)->texMap <= Tile::TileTexture::player_idle)
-                ((Character *)object)->enemyPatrol(bottomMap, topMap, pos-(xSize*ySize), xSize, ySize);
-
-            pos++;
-        }
+    // need to run next turn?
+    if (runningTurns) {
+        if (glfwGetTime() >= turnTick + 1.0) runTurn();
     }
 }
 
@@ -431,4 +430,24 @@ void SceneManager::loadMap(string filename, int mapSizeX, int mapSizeY, int* map
             countRow++;
         }
     }
+}
+
+void SceneManager::runTurn() {
+    int pos = 0;
+    bool needStop = false;
+
+    for (auto object : objects) {
+        if (((Tile *)object)->texMap >= Tile::TileTexture::player_idle &&
+            ((Tile *)object)->texMap != Tile::TileTexture::nothing)
+            needStop = ((Character *)object)->followPath(bottomMap, topMap, pos-(xSize*ySize), xSize);
+
+        else if (((Tile *)object)->texMap >= Tile::TileTexture::enemy_idle &&
+                 ((Tile *)object)->texMap <= Tile::TileTexture::player_idle)
+            ((Character *)object)->enemyPatrol(bottomMap, topMap, pos-(xSize*ySize), xSize, ySize);
+
+        pos++;
+    }
+
+    if (needStop) runningTurns = false;
+    turnTick = glfwGetTime();
 }

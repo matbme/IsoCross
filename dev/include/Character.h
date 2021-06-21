@@ -29,7 +29,7 @@ public:
     Movement getLastMove();
     void setLastMove(Character::Movement move);
 
-    void followPath(int* bottomMap, int* topMap, int position, int xSize);
+    bool followPath(int* bottomMap, int* topMap, int position, int xSize);
     void enemyPatrol(int *bottomMap, int *topMap, int position, int xSize, int ySize);
 
 private:

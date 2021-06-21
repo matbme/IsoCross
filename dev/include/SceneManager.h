@@ -50,6 +50,8 @@ public:
     void setTextureForTile(Tile *tile, int textCode);
     void loadMap(string filename, int mapSizeX, int mapSizeY, int* map);
 
+    void runTurn();
+
 private:
 	
 	//Janela GLFW (por enquanto, assumimos apenas 1 instância)
