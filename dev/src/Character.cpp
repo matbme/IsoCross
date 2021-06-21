@@ -14,40 +14,64 @@ void Character::setLastMove(Character::Movement move) {
     Character::playerLastMove = move;
 }
 
-bool Character::followPath(int* bottomMap, int* topMap, int position, int xSize) {
+Character::NextState Character::followPath(int* bottomMap, int* topMap, int position, int xSize) {
     int pos = position - 1;
-    bool needStop = true;
+    Character::NextState state = Character::NextState::stop;
 
     // try left
     if (bottomMap[pos - 1] == Tile::TileTexture::stone && Character::getLastMove() != Character::Movement::right) {
-        topMap[pos - 1] = Tile::TileTexture::player_go_left;
-        topMap[pos] = Tile::TileTexture::nothing;
-        Character::setLastMove(Character::Movement::left);
-        needStop = false;
+        // does he die?
+        if (topMap[pos - xSize - 1] == Tile::TileTexture::enemy_go_down ||
+            topMap[pos + xSize - 1] == Tile::TileTexture::enemy_go_up) {
+            state = Character::NextState::dead;
+        } else {
+            topMap[pos - 1] = Tile::TileTexture::player_go_left;
+            topMap[pos] = Tile::TileTexture::nothing;
+            Character::setLastMove(Character::Movement::left);
+            state = Character::NextState::move;
+        }
     }
     // try up
     else if (bottomMap[pos - xSize] == Tile::TileTexture::stone && Character::getLastMove() != Character::Movement::down) {
-        topMap[pos - xSize] = Tile::TileTexture::player_go_up;
-        topMap[pos] = Tile::TileTexture::nothing;
-        Character::setLastMove(Character::Movement::up);
-        needStop = false;
+        // does he die?
+        if (topMap[pos - xSize - 1] == Tile::TileTexture::enemy_go_left ||
+            topMap[pos - xSize + 1] == Tile::TileTexture::enemy_go_right) {
+            state = Character::NextState::dead;
+        } else {
+            topMap[pos - xSize] = Tile::TileTexture::player_go_up;
+            topMap[pos] = Tile::TileTexture::nothing;
+            Character::setLastMove(Character::Movement::up);
+            state = Character::NextState::move;
+        }
     }
     // try right
     else if (bottomMap[pos + 1] == Tile::TileTexture::stone && Character::getLastMove() != Character::Movement::left) {
-        topMap[pos + 1] = Tile::TileTexture::player_go_right;
-        topMap[pos] = Tile::TileTexture::nothing;
-        Character::setLastMove(Character::Movement::right);
-        needStop = false;
+        // does he die?
+        if (topMap[pos - xSize + 1] == Tile::TileTexture::enemy_go_down ||
+            topMap[pos + xSize + 1] == Tile::TileTexture::enemy_go_up) {
+            state = Character::NextState::dead;
+        } else {
+            topMap[pos + 1] = Tile::TileTexture::player_go_right;
+            topMap[pos] = Tile::TileTexture::nothing;
+            Character::setLastMove(Character::Movement::right);
+            state = Character::NextState::move;
+        }
     }
     // try down
     else if (bottomMap[pos + xSize] == Tile::TileTexture::stone && Character::getLastMove() != Character::Movement::up) {
-        topMap[pos + xSize] = Tile::TileTexture::player_go_down;
-        topMap[pos] = Tile::TileTexture::nothing;
-        Character::setLastMove(Character::Movement::down);
-        needStop = false;
+        // does he die?
+        if (topMap[pos + xSize - 1] == Tile::TileTexture::enemy_go_right ||
+            topMap[pos + xSize + 1] == Tile::TileTexture::enemy_go_left) {
+            state = Character::NextState::dead;
+        } else {
+            topMap[pos + xSize] = Tile::TileTexture::player_go_down;
+            topMap[pos] = Tile::TileTexture::nothing;
+            Character::setLastMove(Character::Movement::down);
+            state = Character::NextState::move;
+        }
     }
 
-    return needStop;
+    return state;
 }
 
 void Character::enemyPatrol(int *bottomMap, int *topMap, int position, int xSize, int ySize) {

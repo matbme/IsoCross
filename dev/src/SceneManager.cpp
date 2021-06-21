@@ -440,12 +440,13 @@ void SceneManager::loadMap(string filename, int mapSizeX, int mapSizeY, int* map
 
 void SceneManager::runTurn() {
     int pos = 0;
-    bool needStop = false;
+    Character::NextState state = Character::NextState::move;
 
     for (auto object : objects) {
         if (((Tile *)object)->texMap >= Tile::TileTexture::player_idle &&
-            ((Tile *)object)->texMap != Tile::TileTexture::nothing)
-            needStop = ((Character *)object)->followPath(bottomMap, topMap, pos-(xSize*ySize), xSize);
+            ((Tile *)object)->texMap != Tile::TileTexture::nothing &&
+            ((Tile *)object)->texMap != Tile::TileTexture::goal)
+            state = ((Character *)object)->followPath(bottomMap, topMap, pos-(xSize*ySize), xSize);
 
         else if (((Tile *)object)->texMap >= Tile::TileTexture::enemy_idle &&
                  ((Tile *)object)->texMap <= Tile::TileTexture::player_idle)
@@ -454,6 +455,6 @@ void SceneManager::runTurn() {
         pos++;
     }
 
-    if (needStop) runningTurns = false;
+    if (state == Character::NextState::stop) runningTurns = false;
     turnTick = glfwGetTime();
 }

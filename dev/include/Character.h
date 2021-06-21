@@ -26,10 +26,16 @@ public:
         down = 3,
     };
 
+    static enum NextState {
+        stop = 0,
+        move = 1,
+        dead = 2,
+    };
+
     Movement getLastMove();
     void setLastMove(Character::Movement move);
 
-    bool followPath(int* bottomMap, int* topMap, int position, int xSize);
+    NextState followPath(int* bottomMap, int* topMap, int position, int xSize);
     void enemyPatrol(int *bottomMap, int *topMap, int position, int xSize, int ySize);
 
 private:
